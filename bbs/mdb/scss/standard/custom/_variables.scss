@@ -1,1 +1,10 @@
 // Your custom variables
+@import "../free/_variables.scss";
+
+$custom-colors: (
+  "amber50": $amber-50,
+  "orange50": $deep-orange-50
+);
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
