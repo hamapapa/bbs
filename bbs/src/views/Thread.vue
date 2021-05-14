@@ -1,26 +1,30 @@
 <template>
   <div class="p-3 text-center">
-    <h1>スレッド一覧</h1>
-    <MDBTable>
-      <thead>
-        <tr class="table-primary">
-          <th>スレッドID</th>
-          <th class="text-start">タイトル</th>
-          <th>ユーザID</th>
-          <th class="text-start">ユーザ名</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="thread in threads" v-bind:key="thread.id">
-          <td>{{ thread.id }}</td>
-          <td class="text-start">
-            <a v-bind:href="'/comment/' + thread.id">{{ thread.title }}</a>
-          </td>
-          <td>{{ thread.user_id }}</td>
-          <td class="text-start">{{ thread.user.name }}</td>
-        </tr>
-      </tbody>
-    </MDBTable>
+    <h1 class="text-togglenav">スレッド一覧</h1>
+    <div class="shadow">
+      <MDBTable>
+        <thead>
+          <tr class="bg-togglebar text-white">
+            <th>スレッドID</th>
+            <th class="text-start">タイトル</th>
+            <th>ユーザID</th>
+            <th class="text-start">ユーザ名</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="thread in threads" v-bind:key="thread.id">
+            <td>{{ thread.id }}</td>
+            <td class="text-start">
+              <a class="text-togglebtn" v-bind:href="'/comment/' + thread.id">{{
+                thread.title
+              }}</a>
+            </td>
+            <td>{{ thread.user_id }}</td>
+            <td class="text-start">{{ thread.user.name }}</td>
+          </tr>
+        </tbody>
+      </MDBTable>
+    </div>
   </div>
 </template>
 

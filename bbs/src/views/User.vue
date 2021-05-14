@@ -1,10 +1,10 @@
 <template>
-  <div class="p-5 text-center mb-3">
-    <h1>ユーザリスト</h1>
+  <div class="p-3 text-center mb-3">
+    <h1 class="text-togglenav">ユーザリスト</h1>
     <div v-if="users">
-      <MDBTable variant="striped">
+      <MDBTable class="shadow">
         <thead>
-          <tr class="table-success">
+          <tr class="bg-togglebar text-white">
             <th>ID</th>
             <th>name</th>
             <th>email</th>

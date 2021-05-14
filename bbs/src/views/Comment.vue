@@ -6,14 +6,19 @@
         <MDBRow class="mt-4">
           <MDBCol col="2"></MDBCol>
           <MDBCol col="8">
-            <MDBCard style="width: 100%">
+            <MDBCard
+              class="bg-togglebar text-white shadow-5 rounded-3"
+              style="width: 100%"
+            >
               <MDBCardBody>
-                <MDBCardTitle>{{ comment.user.name }}</MDBCardTitle>
+                <MDBCardTitle class="border-bottom border-white">
+                  {{ comment.user.name }}</MDBCardTitle
+                >
                 <MDBCardText class="text-start">
                   {{ comment.comment }}
                   <p>{{ comment.updated_at }}</p>
                 </MDBCardText>
-                <MDBBtn color="danger">削除</MDBBtn>
+                <MDBBtn color="white">削除</MDBBtn>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
@@ -23,7 +28,10 @@
       <div class="my-4">
         <MDBRow class="mt-4">
           <MDBCol col="4"></MDBCol>
-          <MDBCol col="4">
+          <MDBCol
+            col="4"
+            class="p-3 border border-1 border-togglebar shadow rounded-3"
+          >
             <MDBInput
               label="ユーザID"
               v-model="input.user_id"
@@ -38,7 +46,7 @@
             <button
               @click="onClickCreate"
               type="button"
-              class="btn btn-primary"
+              class="btn btn-togglebtn"
             >
               登録
             </button>
