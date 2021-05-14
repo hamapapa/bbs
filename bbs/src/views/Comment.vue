@@ -3,6 +3,7 @@
     <h1>{{ title }}#{{ thread_id }}</h1>
     <MDBContainer>
       <template v-for="comment in comments" v-bind:key="comment.id">
+        <!-- <MDBRow class="mt-4" v-if="comment.deleted_at"> -->
         <MDBRow class="mt-4">
           <MDBCol col="2"></MDBCol>
           <MDBCol col="8">
@@ -18,7 +19,9 @@
                   {{ comment.comment }}
                   <p>{{ comment.updated_at }}</p>
                 </MDBCardText>
-                <MDBBtn color="white">削除</MDBBtn>
+                <MDBBtn v-on:click="onClickDelete(comment.id)" color="white"
+                  >削除</MDBBtn
+                >
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
@@ -159,10 +162,46 @@ export default {
         });
     };
 
+    const onClickDelete = (comment_id) => {
+      const dt = new Date();
+      const y = dt.getFullYear();
+      const m = (dt.getMonth() + 1).toString().padStart(2, "0");
+      const d = dt.getDate().toString().padStart(2, "0");
+      const hh = dt.getHours().toString().padStart(2, "0");
+      const mm = dt.getMinutes().toString().padStart(2, "0");
+      const ss = dt.getSeconds().toString().padStart(2, "0");
+      const deleted_at = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+
+      console.log(deleted_at);
+
+      axios({
+        url: "http://localhost/graphql",
+        method: "POST",
+        data: {
+          query: `
+             mutation {
+               deleteComment(
+                  id: ${comment_id}
+                  deleted_at: "${deleted_at}"
+               ){
+                  id
+                  deleted_at
+                  updated_at
+               }
+             }
+
+          `,
+        },
+      }).then((response) => {
+        console.log(response.data);
+      });
+    };
+
     return {
       ...toRefs(state),
       input,
       onClickCreate,
+      onClickDelete,
     };
   },
   props: {

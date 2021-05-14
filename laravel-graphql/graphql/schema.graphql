@@ -47,12 +47,6 @@ type Comment {
 }
 
 type Mutation {
-    ccreateComment(input: CreateCommentInput! @spread): Comment! @create
     createComment(thread_id: ID!, user_id: ID!, comment: String!): Comment! @create
-}
-
-input CreateCommentInput {
-    thread_id: ID!
-    user_id: ID!
-    comment: String!
+    deleteComment(id: ID!, deleted_at: DateTime!): Comment! @update
 }

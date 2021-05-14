@@ -11,7 +11,7 @@ class Comment extends Model
     use HasFactory;
     
     protected $fillable = [
-        'thread_id', 'user_id', 'comment',
+        'thread_id', 'user_id', 'comment', 'deleted_at'
     ];
     
     /**
