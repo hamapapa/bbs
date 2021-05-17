@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
 class Thread extends Model
 {
     use HasFactory;
-    
+
     // protected $fillable = [
     //     "user_id", "title", "deleted_at"
     // ];
@@ -19,7 +19,7 @@ class Thread extends Model
         "id"
         , "created_at"
     ];
-    
+
     /**
      * Get the user that owns the Thread
      *
@@ -29,7 +29,7 @@ class Thread extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    
+
     /**
      * Get all of the comments for the Thread
      *

@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Comment extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'thread_id', 'user_id', 'comment', 'deleted_at'
     ];
-    
+
     /**
      * Get the user that owns the Comment
      *
@@ -23,7 +23,7 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    
+
     /**
      * Get the thread that owns the Comment
      *
