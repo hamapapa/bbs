@@ -1,6 +1,20 @@
 <template>
   <div class="p-3 text-center">
     <h1 class="text-togglenav">スレッド一覧</h1>
+    <MDBRow class="mb-4">
+      <MDBCol class="p-3 border border-1 border-togglebar shadow rounded-3">
+        <MDBInput
+          label="ユーザID"
+          v-model="input.user_id"
+          class="mb-3 bg-white"
+        />
+        <MDBInput label="コメント" v-model="input.title" class="bg-white" />
+        <br />
+        <button @click="onClickCreate" type="button" class="btn btn-togglebtn">
+          登録
+        </button>
+      </MDBCol>
+    </MDBRow>
     <div class="shadow">
       <MDBTable>
         <thead>
@@ -32,9 +46,13 @@
 import { reactive, toRefs } from "@vue/reactivity";
 import { watchEffect } from "@vue/runtime-core";
 import axios from "axios";
-import { MDBTable } from "mdb-vue-ui-kit";
+import { MDBRow, MDBCol, MDBInput, MDBTable } from "mdb-vue-ui-kit";
 export default {
   setup() {
+    const input = reactive({
+      user_id: "",
+      title: "",
+    });
     const state = reactive({
       threads: [],
     });
@@ -57,16 +75,46 @@ export default {
                   }
                 `,
         },
-      }).then((Response) => {
-        state.threads = JSON.parse(JSON.stringify(Response.data.data.threads));
+      }).then((response) => {
+        state.threads = Object.values(response.data.data.threads);
       });
     });
 
+    const onClickCreate = () => {
+      axios({
+        url: "http://localhost/graphql",
+        method: "POST",
+        data: {
+          query: `
+            mutation{
+              createThread(user_id: ${input.user_id}, title: "${input.title}"){
+                id
+                user_id
+                title
+                user{
+                  name
+                }
+              }
+            }
+          `,
+        },
+      }).then((response) => {
+        state.threads.push(response.data.data.createThread);
+        input.user_id = "";
+        input.title = "";
+      });
+    };
+
     return {
       ...toRefs(state),
+      input,
+      onClickCreate,
     };
   },
   components: {
+    MDBRow,
+    MDBCol,
+    MDBInput,
     MDBTable,
   },
 };

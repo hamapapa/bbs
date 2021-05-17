@@ -49,4 +49,5 @@ type Comment {
 type Mutation {
     createComment(thread_id: ID!, user_id: ID!, comment: String!): Comment! @create
     deleteComment(id: ID!, deleted_at: DateTime!): Comment! @update
+    createThread(user_id: ID!, title: String!): Thread! @create
 }
