@@ -27,7 +27,7 @@ type Thread {
     id: ID!
     user_id: ID!
     title: String!
-    deleted_at: DateTime!
+    deleted_at: DateTime
     created_at: DateTime!
     updated_at: DateTime!
     user: User! @belongsTo
@@ -39,7 +39,7 @@ type Comment {
     thread_id: ID!
     user_id: ID!
     comment: String!
-    deleted_at: DateTime!
+    deleted_at: DateTime
     created_at: DateTime!
     updated_at: DateTime!
     user: User! @belongsTo

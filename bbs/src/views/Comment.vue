@@ -2,9 +2,9 @@
   <div class="text-center">
     <h1>{{ title }}#{{ thread_id }}</h1>
     <MDBContainer>
-      <template v-for="comment in comments" v-bind:key="comment.id">
+      <template v-for="(comment, index) in comments" v-bind:key="comment.id">
         <!-- <MDBRow class="mt-4" v-if="comment.deleted_at"> -->
-        <MDBRow class="mt-4">
+        <MDBRow class="mt-4" v-if="!comment.deleted_at">
           <MDBCol col="2"></MDBCol>
           <MDBCol col="8">
             <MDBCard
@@ -19,7 +19,9 @@
                   {{ comment.comment }}
                   <p>{{ comment.updated_at }}</p>
                 </MDBCardText>
-                <MDBBtn v-on:click="onClickDelete(comment.id)" color="white"
+                <MDBBtn
+                  v-on:click="onClickDelete(comment.id, index)"
+                  color="white"
                   >削除</MDBBtn
                 >
               </MDBCardBody>
@@ -103,6 +105,7 @@ export default {
                   id
                   user_id
                   comment
+                  deleted_at
                   updated_at
                   user{
                     name
@@ -117,7 +120,6 @@ export default {
           const data = response.data.data.thread;
           state.title = data.title;
           state.comments = Object.values(response.data.data.thread.comments);
-          console.log(state.comments);
         })
         .catch((e) => {
           console.log(e);
@@ -149,7 +151,6 @@ export default {
         },
       })
         .then((response) => {
-          console.log("create comment response");
           state.comments.push(response.data.data.createComment);
 
           // state.thread.splice(0, state.thread.length);
@@ -162,7 +163,7 @@ export default {
         });
     };
 
-    const onClickDelete = (comment_id) => {
+    const onClickDelete = (comment_id, index) => {
       const dt = new Date();
       const y = dt.getFullYear();
       const m = (dt.getMonth() + 1).toString().padStart(2, "0");
@@ -171,8 +172,6 @@ export default {
       const mm = dt.getMinutes().toString().padStart(2, "0");
       const ss = dt.getSeconds().toString().padStart(2, "0");
       const deleted_at = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
-
-      console.log(deleted_at);
 
       axios({
         url: "http://localhost/graphql",
@@ -185,16 +184,25 @@ export default {
                   deleted_at: "${deleted_at}"
                ){
                   id
+                  user_id
+                  comment
                   deleted_at
                   updated_at
+                  user{
+                    name
+                  }
                }
              }
 
           `,
         },
-      }).then((response) => {
-        console.log(response.data);
-      });
+      })
+        .then((response) => {
+          state.comments[index] = response.data.data.deleteComment;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     };
 
     return {
