@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-light text-center text-white fixed-bottom mt-3">
+  <footer class="bg-light text-center text-white mt-3">
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
       © 2020 Copyright:

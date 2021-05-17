@@ -1,17 +1,16 @@
 <template>
   <Header />
-  <router-view />
-  <Footer />
+  <div class="py-4">
+    <router-view />
+  </div>
 </template>
 
 <script>
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 export default {
   setup() {},
   components: {
     Header,
-    Footer,
   },
 };
 </script>

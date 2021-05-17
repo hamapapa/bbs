@@ -9,6 +9,8 @@ services:
             - 80:80
         depends_on: 
             - mysql
+        environment: 
+            TZ: Asia/Tokyo
     mysql:
         image: mysql:8
         restart: always
@@ -18,6 +20,7 @@ services:
         volumes:
             - bbs-db:/usr/lib/msyql
         environment: 
+            TZ: Asia/Tokyo
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: laravel
             MYSQL_USER: mylaravel
