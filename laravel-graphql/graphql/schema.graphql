@@ -4,7 +4,8 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
-type Query {
+
+extend type Query @guard{
     users: [User!]! @paginate(defaultCount: 10)
     user(id: ID @eq): User @find
     threads: [Thread!]! @all
@@ -19,8 +20,8 @@ type User {
     email: String!
     created_at: DateTime!
     updated_at: DateTime!
-    threads: [Thread!]! @hasMany
-    comments: [Comment!]! @hasMany
+    threads: [Thread!] @hasMany
+    comments: [Comment!] @hasMany
 }
 
 type Thread {
@@ -47,7 +48,14 @@ type Comment {
 }
 
 type Mutation {
+    login(email: String!, password: String!): Token
     createComment(thread_id: ID!, user_id: ID!, comment: String!): Comment! @create
     deleteComment(id: ID!, deleted_at: DateTime!): Comment! @update
     createThread(user_id: ID!, title: String!): Thread! @create
+}
+
+
+type Token{
+    token: String!
+    user: User!
 }
