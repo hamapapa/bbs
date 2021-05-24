@@ -1,20 +1,28 @@
 <template>
   <div class="p-3 text-center">
     <h1 class="text-togglenav">スレッド一覧</h1>
-    <MDBRow class="mb-4">
-      <MDBCol class="p-3 border border-1 border-togglebar shadow rounded-3">
-        <MDBInput
-          label="ユーザID"
-          v-model="input.user_id"
-          class="mb-3 bg-white"
-        />
-        <MDBInput label="コメント" v-model="input.title" class="bg-white" />
-        <br />
-        <button @click="onClickCreate" type="button" class="btn btn-togglebtn">
-          登録
-        </button>
-      </MDBCol>
-    </MDBRow>
+    <div>
+      <MDBRow class="d-flex justify-content-center mb-4">
+        <MDBCol
+          class="col-md-6 p-3 border border-1 border-togglebar shadow rounded-3"
+        >
+          <MDBInput
+            label="ユーザID"
+            v-model="input.user_id"
+            class="mb-3 bg-white"
+          />
+          <MDBInput label="コメント" v-model="input.title" class="bg-white" />
+          <br />
+          <button
+            @click="onClickCreate"
+            type="button"
+            class="btn btn-togglebtn"
+          >
+            登録
+          </button>
+        </MDBCol>
+      </MDBRow>
+    </div>
     <div class="shadow">
       <MDBTable>
         <thead>
