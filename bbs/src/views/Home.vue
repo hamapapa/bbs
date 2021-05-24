@@ -86,6 +86,7 @@ export default {
               login(email:"${input.email}", password:"${input.password}"){
                 token
                 user{
+                  id
                   name
                 }
               }
@@ -104,6 +105,7 @@ export default {
 
           store.commit("login", {
             token: data.token,
+            userId: data.user.id,
             userName: data.user.name,
           });
         })

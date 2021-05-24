@@ -38,11 +38,6 @@
             class="p-3 border border-1 border-togglebar shadow rounded-3"
           >
             <MDBInput
-              label="ユーザID"
-              v-model="input.user_id"
-              class="mb-3 bg-white"
-            />
-            <MDBInput
               label="コメント"
               v-model="input.comment"
               class="bg-white"
@@ -84,13 +79,15 @@ export default {
     const token = computed(() => {
       return store.state.token;
     });
+    const userId = computed(() => {
+      return store.state.userId;
+    });
     const state = reactive({
       title: "",
       comments: [],
     });
 
     const input = reactive({
-      user_id: "",
       comment: "",
     });
 
@@ -145,7 +142,7 @@ export default {
             mutation {
               createComment(
                 thread_id: ${props.thread_id}
-                user_id: ${input.user_id}
+                user_id: ${userId.value}
                 comment: "${input.comment}"
               ){
                 id

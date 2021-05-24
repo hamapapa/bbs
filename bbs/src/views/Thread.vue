@@ -6,11 +6,6 @@
         <MDBCol
           class="col-md-6 p-3 border border-1 border-togglebar shadow rounded-3"
         >
-          <MDBInput
-            label="ユーザID"
-            v-model="input.user_id"
-            class="mb-3 bg-white"
-          />
           <MDBInput label="コメント" v-model="input.title" class="bg-white" />
           <br />
           <button
@@ -66,8 +61,10 @@ export default {
     const token = computed(() => {
       return store.state.token;
     });
+    const userId = computed(() => {
+      return store.state.userId;
+    });
     const input = reactive({
-      user_id: "",
       title: "",
     });
     const state = reactive({
@@ -110,7 +107,7 @@ export default {
         data: {
           query: `
             mutation{
-              createThread(user_id: ${input.user_id}, title: "${input.title}"){
+              createThread(user_id: ${userId.value}, title: "${input.title}"){
                 id
                 user_id
                 title
