@@ -24,8 +24,8 @@ const routes = [
     path: '/comment/:thread_id',
     name: 'Comment',
     component: () => import('../views/Comment.vue'),
+    meta: { requireAuth: true },
     props: true,
-    meta: { requireAuth: true }
   }
 ]
 

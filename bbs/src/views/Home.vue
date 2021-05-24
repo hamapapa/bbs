@@ -8,6 +8,7 @@
         GraphQL（Laravel）で掲示板を作ってみる
       </h1>
     </div>
+    <p>tharber@example.net</p>
     <div v-if="isLogined">
       <h2 class="text-center">ようこそ {{ userName }} 様</h2>
     </div>
@@ -45,9 +46,6 @@
           </form>
         </MDBCol>
       </MDBRow>
-      <p>
-        {{ token }}
-      </p>
     </div>
     <!-- </MDBContainer> -->
   </div>
@@ -75,7 +73,6 @@ export default {
     });
     const state = reactive({
       hasError: false,
-      token: "",
     });
 
     const onClickLogin = () => {
@@ -97,15 +94,13 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response.data);
           const data = response.data.data.login;
           if (data == null) {
             state.hasError = true;
             return;
           }
-          state.token = data.token;
-          // input.email = "";
-          // input.password = "";
+          input.email = "";
+          input.password = "";
 
           store.commit("login", {
             token: data.token,

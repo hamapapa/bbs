@@ -65,8 +65,9 @@
 
 <script>
 import { reactive, toRefs } from "@vue/reactivity";
-import { watchEffect } from "@vue/runtime-core";
+import { computed, watchEffect } from "@vue/runtime-core";
 import axios from "axios";
+import store from "../store";
 import {
   MDBCard,
   MDBCardBody,
@@ -80,6 +81,9 @@ import {
 } from "mdb-vue-ui-kit";
 export default {
   setup(props) {
+    const token = computed(() => {
+      return store.state.token;
+    });
     const state = reactive({
       title: "",
       comments: [],
@@ -94,6 +98,9 @@ export default {
       axios({
         url: "http://localhost/graphql",
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
         data: {
           query: `
             query {
@@ -130,6 +137,9 @@ export default {
       axios({
         url: "http://localhost/graphql",
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
         data: {
           query: `
             mutation {
@@ -176,6 +186,9 @@ export default {
       axios({
         url: "http://localhost/graphql",
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
         data: {
           query: `
              mutation {

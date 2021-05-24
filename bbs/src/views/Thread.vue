@@ -37,9 +37,14 @@
           <tr v-for="thread in threads" v-bind:key="thread.id">
             <td>{{ thread.id }}</td>
             <td class="text-start">
-              <a class="text-togglebtn" v-bind:href="'/comment/' + thread.id">{{
+              <router-link
+                :to="{ name: 'Comment', params: { thread_id: thread.id } }"
+                class="text-togglebtn"
+                >{{ thread.title }}</router-link
+              >
+              <!-- <a class="text-togglebtn" v-bind:href="'/comment/' + thread.id">{{
                 thread.title
-              }}</a>
+              }}</a> -->
             </td>
             <td>{{ thread.user_id }}</td>
             <td class="text-start">{{ thread.user.name }}</td>
@@ -52,11 +57,15 @@
 
 <script>
 import { reactive, toRefs } from "@vue/reactivity";
-import { watchEffect } from "@vue/runtime-core";
+import { computed, watchEffect } from "@vue/runtime-core";
 import axios from "axios";
+import store from "../store";
 import { MDBRow, MDBCol, MDBInput, MDBTable } from "mdb-vue-ui-kit";
 export default {
   setup() {
+    const token = computed(() => {
+      return store.state.token;
+    });
     const input = reactive({
       user_id: "",
       title: "",
@@ -69,6 +78,9 @@ export default {
       axios({
         url: "http://localhost/graphql",
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
         data: {
           query: `
                   query {
@@ -92,6 +104,9 @@ export default {
       axios({
         url: "http://localhost/graphql",
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
         data: {
           query: `
             mutation{
