@@ -8,8 +8,8 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 extend type Query @guard{
     users: [User!]! @paginate(defaultCount: 10)
     user(id: ID @eq): User @find
-    threads: [Thread!]! @all @softDeletes
-    searchThreads(title: String! @where(operator: "like")): [Thread!]! @all @softDeletes
+    threads(orderBy: [SortOption!] @orderBy): [Thread!]! @all @softDeletes
+    searchThreads(title: String! @where(operator: "like") orderBy: [SortOption!] @orderBy): [Thread!]! @all @softDeletes
     thread(id: ID @eq): Thread @find
     comments: [Comment!]! @paginate(defaultCount:10)
     comment(id: ID @eq): Comment @find
@@ -59,4 +59,13 @@ type Mutation {
 type Token{
     token: String!
     user: User!
+}
+
+input SortOption{
+    column: String!
+    order: SoftOrder!
+}
+enum SoftOrder{
+    ASC
+    DESC
 }

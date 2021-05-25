@@ -9,7 +9,7 @@
           <MDBInput label="コメント" v-model="input.title" class="bg-white" />
           <br />
           <button
-            @click="onClickCreate"
+            @click="onClickCreate('')"
             type="button"
             class="btn btn-togglebtn"
           >
@@ -30,7 +30,7 @@
             <!-- <input type="search" id="form1" class="form-control" /> -->
           </div>
           <button
-            v-on:click="onClickSearch"
+            v-on:click="onClickSearch('')"
             type="button"
             class="btn btn-togglebtn"
           >
@@ -43,8 +43,14 @@
       <MDBTable>
         <thead>
           <tr class="bg-togglebar text-white">
-            <th>スレッドID</th>
-            <th class="text-start">タイトル</th>
+            <th @click="onClickSearch('id')">
+              スレッドID
+              <i v-bind:class="sortIconId" class="mx-2 fas"></i>
+            </th>
+            <th class="text-start" @click="onClickSearch('title')">
+              タイトル
+              <i v-bind:class="sortIconTitle" class="mx-2 fas"></i>
+            </th>
             <th>ユーザID</th>
             <th class="text-start">ユーザ名</th>
           </tr>
@@ -73,7 +79,7 @@
 
 <script>
 import { reactive, toRefs } from "@vue/reactivity";
-import { computed, watchEffect } from "@vue/runtime-core";
+import { computed, onMounted } from "@vue/runtime-core";
 import axios from "axios";
 import store from "../store";
 import { MDBRow, MDBCol, MDBInput, MDBTable } from "mdb-vue-ui-kit";
@@ -88,12 +94,14 @@ export default {
     const input = reactive({
       title: "",
       searchTitle: "",
+      sortKey: "id",
+      sortOrder: "ASC",
     });
     const state = reactive({
       threads: [],
     });
 
-    watchEffect(() => {
+    onMounted(() => {
       axios({
         url: "http://localhost/graphql",
         method: "POST",
@@ -102,19 +110,25 @@ export default {
         },
         data: {
           query: `
-                  query {
-                    threads{
-                        id
-                        user_id
-                        title
-                        user{
-                          name
-                        }
-                    }
+            query {
+              threads(orderBy: [
+                {
+                  column: "${input.sortKey}"
+                  order: ${input.sortOrder}
+                }
+              ]){
+                  id
+                  user_id
+                  title
+                  user{
+                    name
                   }
-                `,
+              }
+            }
+          `,
         },
       }).then((response) => {
+        console.log("watch effect");
         state.threads = Object.values(response.data.data.threads);
       });
     });
@@ -147,7 +161,9 @@ export default {
       });
     };
 
-    const onClickSearch = () => {
+    const onClickSearch = (column) => {
+      setSortOption(column);
+      console.log(input);
       axios({
         url: "http://localhost/graphql",
         method: "POST",
@@ -157,7 +173,13 @@ export default {
         data: {
           query: `
             query {
-              searchThreads(title: "%${input.searchTitle}%"){
+              searchThreads(title: "%${input.searchTitle}%" orderBy: [
+                {
+                  column: "${input.sortKey}"
+                  order: ${input.sortOrder}
+                }
+              ])
+              {
                 id
                 user_id
                 title
@@ -170,11 +192,55 @@ export default {
         },
       })
         .then((response) => {
+          console.log(response);
+          state.threads = [];
+          console.log(state.threads);
           state.threads = Object.values(response.data.data.searchThreads);
+          console.log(state.threads);
         })
         .catch((e) => {
           console.log(e);
         });
+    };
+
+    const setSortOption = (column) => {
+      if (column == "") {
+        input.sortKey = "id";
+        input.sortOrder = "ASC";
+        return;
+      }
+
+      if (column != input.sortKey) {
+        input.sortKey = column;
+        input.sortOrder = "ASC";
+        return;
+      }
+
+      if (input.sortOrder == "ASC") {
+        input.sortOrder = "DESC";
+        return;
+      }
+
+      input.sortOrder = "ASC";
+      return;
+    };
+
+    const sortIconId = computed(() => {
+      return setSortIcon("id");
+    });
+    const sortIconTitle = computed(() => {
+      return setSortIcon("title");
+    });
+
+    const setSortIcon = (key) => {
+      if (key != input.sortKey) {
+        return "fa-arrow-up";
+      }
+
+      if (input.sortOrder == "ASC") {
+        return "fa-arrow-circle-up";
+      }
+      return "fa-arrow-circle-down";
     };
 
     return {
@@ -182,6 +248,8 @@ export default {
       input,
       onClickCreate,
       onClickSearch,
+      sortIconId,
+      sortIconTitle,
     };
   },
   components: {
