@@ -1,0 +1,45 @@
+extend type Query @guard{
+    threads(orderBy: [SortOption!] @orderBy): [Thread!]! @all @softDeletes
+    searchThreads(title: String! @where(operator: "like") orderBy: [SortOption!] @orderBy): [Thread!]! @all @softDeletes
+    thread(id: ID @eq): Thread @find
+    comments: [Comment!]! @paginate(defaultCount:10)
+    comment(id: ID @eq): Comment @find
+}
+
+type Thread {
+    id: ID!
+    user_id: ID!
+    title: String!
+    deleted_at: DateTime
+    created_at: DateTime!
+    updated_at: DateTime!
+    user: User! @belongsTo
+    comments: [Comment!]! @hasMany
+}
+
+type Comment {
+    id: ID!
+    thread_id: ID!
+    user_id: ID!
+    comment: String!
+    deleted_at: DateTime
+    created_at: DateTime!
+    updated_at: DateTime!
+    user: User! @belongsTo
+    thread: Thread! @belongsTo
+}
+
+extend type Mutation {
+    createThread(user_id: ID!, title: String!): Thread! @create
+    createComment(thread_id: ID!, user_id: ID!, comment: String!): Comment! @create
+    deleteComment(id: ID!, deleted_at: DateTime!): Comment! @update
+}
+
+input SortOption{
+    column: String!
+    order: SoftOrder!
+}
+enum SoftOrder{
+    ASC
+    DESC
+}

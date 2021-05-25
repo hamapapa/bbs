@@ -27,12 +27,16 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, watchEffect } from "vue";
+import { computed, defineComponent, reactive, toRefs, watchEffect } from "vue";
 import axios from "axios";
+import store from "../store";
 import { MDBTable } from "mdb-vue-ui-kit";
 
 export default defineComponent({
   setup() {
+    const token = computed(() => {
+      return store.state.token;
+    });
     const state = reactive({
       users: "",
     });
@@ -41,6 +45,9 @@ export default defineComponent({
       axios({
         url: "http://localhost/graphql",
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
         data: {
           query: `
             query GetUsers{
