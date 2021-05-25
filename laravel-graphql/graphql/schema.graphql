@@ -5,67 +5,14 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 
-extend type Query @guard{
-    users: [User!]! @paginate(defaultCount: 10)
-    user(id: ID @eq): User @find
-    threads(orderBy: [SortOption!] @orderBy): [Thread!]! @all @softDeletes
-    searchThreads(title: String! @where(operator: "like") orderBy: [SortOption!] @orderBy): [Thread!]! @all @softDeletes
-    thread(id: ID @eq): Thread @find
-    comments: [Comment!]! @paginate(defaultCount:10)
-    comment(id: ID @eq): Comment @find
-}
-
-type User {
-    id: ID!
-    name: String!
-    email: String!
-    created_at: DateTime!
-    updated_at: DateTime!
-    threads: [Thread!] @hasMany
-    comments: [Comment!] @hasMany
-}
-
-type Thread {
-    id: ID!
-    user_id: ID!
-    title: String!
-    deleted_at: DateTime
-    created_at: DateTime!
-    updated_at: DateTime!
-    user: User! @belongsTo
-    comments: [Comment!]! @hasMany
-}
-
-type Comment {
-    id: ID!
-    thread_id: ID!
-    user_id: ID!
-    comment: String!
-    deleted_at: DateTime
-    created_at: DateTime!
-    updated_at: DateTime!
-    user: User! @belongsTo
-    thread: Thread! @belongsTo
-}
-
 type Mutation {
     login(email: String!, password: String!): Token
-    createComment(thread_id: ID!, user_id: ID!, comment: String!): Comment! @create
-    deleteComment(id: ID!, deleted_at: DateTime!): Comment! @update
-    createThread(user_id: ID!, title: String!): Thread! @create
 }
-
 
 type Token{
     token: String!
     user: User!
 }
 
-input SortOption{
-    column: String!
-    order: SoftOrder!
-}
-enum SoftOrder{
-    ASC
-    DESC
-}
+#import user.graphql
+#import thread.graphql

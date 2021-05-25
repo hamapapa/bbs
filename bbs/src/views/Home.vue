@@ -8,7 +8,6 @@
         GraphQL（Laravel）で掲示板を作ってみる
       </h1>
     </div>
-    <p>tharber@example.net</p>
     <div v-if="isLogined">
       <h2 class="text-center">ようこそ {{ userName }} 様</h2>
     </div>
