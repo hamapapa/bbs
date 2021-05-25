@@ -128,7 +128,6 @@ export default {
           `,
         },
       }).then((response) => {
-        console.log("watch effect");
         state.threads = Object.values(response.data.data.threads);
       });
     });
@@ -163,7 +162,6 @@ export default {
 
     const onClickSearch = (column) => {
       setSortOption(column);
-      console.log(input);
       axios({
         url: "http://localhost/graphql",
         method: "POST",
@@ -192,11 +190,7 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response);
-          state.threads = [];
-          console.log(state.threads);
           state.threads = Object.values(response.data.data.searchThreads);
-          console.log(state.threads);
         })
         .catch((e) => {
           console.log(e);
