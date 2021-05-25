@@ -18,6 +18,27 @@
         </MDBCol>
       </MDBRow>
     </div>
+    <section class="border p-4 text-center mb-4">
+      <div>
+        <div class="input-group">
+          <div class="form-outline">
+            <MDBInput
+              label="Search"
+              v-model="input.searchTitle"
+              class="bg-white shadow"
+            />
+            <!-- <input type="search" id="form1" class="form-control" /> -->
+          </div>
+          <button
+            v-on:click="onClickSearch"
+            type="button"
+            class="btn btn-togglebtn"
+          >
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </section>
     <div class="shadow">
       <MDBTable>
         <thead>
@@ -66,6 +87,7 @@ export default {
     });
     const input = reactive({
       title: "",
+      searchTitle: "",
     });
     const state = reactive({
       threads: [],
@@ -125,10 +147,41 @@ export default {
       });
     };
 
+    const onClickSearch = () => {
+      axios({
+        url: "http://localhost/graphql",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+        data: {
+          query: `
+            query {
+              searchThreads(title: "%${input.searchTitle}%"){
+                id
+                user_id
+                title
+                user {
+                  name
+                }
+              }
+            }
+          `,
+        },
+      })
+        .then((response) => {
+          state.threads = Object.values(response.data.data.searchThreads);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    };
+
     return {
       ...toRefs(state),
       input,
       onClickCreate,
+      onClickSearch,
     };
   },
   components: {
