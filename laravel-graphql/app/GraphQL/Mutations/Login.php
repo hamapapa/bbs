@@ -13,7 +13,7 @@ class Login
      */
     public function __invoke($_, array $args)
     {
-        if(Auth::attempt($args)){
+        if (Auth::attempt($args)) {
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')->accessToken;
             $success['user'] = $user;

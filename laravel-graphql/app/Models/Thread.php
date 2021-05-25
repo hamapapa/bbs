@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
 
 class Thread extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes;
+    use HasFactory;
 
     // protected $fillable = [
     //     "user_id", "title", "deleted_at"
